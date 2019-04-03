@@ -33,3 +33,6 @@ build*
 *.qm
 
 misc/*/deepin-toggle-desktop.desktop
+*.user
+.vscode/
+build/
