@@ -44,7 +44,13 @@ set(DDE_FULL_FILESYSTEM_SRCS
     dde-full-filesystem/fullfilesystemframe.h
     dde-full-filesystem/fullfilesystemframe.cpp
 )
+
 # dde-lowpower
+set(DDE_LOWPOWER_SRCS
+    dde-lowpower/window.cpp
+    dde-lowpower/window.h
+)
+
 # dde-offline-upgrader
 # dde-osd
 # dde-suspend-dialog
@@ -305,3 +311,22 @@ target_link_libraries(dde-full-filesystem PRIVATE
     ${LINK_LIBS}
 )
 # end dde-full-filesystem
+
+# dde-lowpower
+add_executable(
+    dde-lowpower
+    app/dde-lowpower.cpp
+    ${DDE_LOWPOWER_SRCS}
+    ${INCLUDE_FILES}
+    dde-lowpower/images.qrc
+    ${WIDGETS_QRC}
+)
+target_include_directories(dde-lowpower PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DDE_LOWPOWER_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(dde-lowpower PRIVATE
+    ${LINK_LIBS}
+)
+# end dde-lowpower
