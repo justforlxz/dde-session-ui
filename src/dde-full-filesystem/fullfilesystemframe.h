@@ -22,7 +22,7 @@
 #ifndef FULLFILESYSTEMFRAME_H
 #define FULLFILESYSTEMFRAME_H
 
-#include "fullscreenbackground.h"
+#include "widgets/fullscreenbackground.h"
 
 class FullFilesystemFrame : public FullscreenBackground
 {

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "fullfilesystemframe.h"
+#include "dde-full-filesystem/fullfilesystemframe.h"
 #include <QApplication>
 
 #include <DLog>

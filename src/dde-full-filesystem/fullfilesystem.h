@@ -22,7 +22,7 @@
 #ifndef FULLFILESYSTEM_H
 #define FULLFILESYSTEM_H
 
-#include "userinfo.h"
+#include "session-widgets/userinfo.h"
 
 #include <QLabel>
 #include <QPushButton>

@@ -37,8 +37,13 @@ set(LIGHTDM_DEEPIN_GREETER_SRCS
     lightdm-deepin-greeter/view/logowidget.cpp
     lightdm-deepin-greeter/view/logowidget.h
 )
-# dde-dman-portal
 # dde-full-filesystem
+set(DDE_FULL_FILESYSTEM_SRCS
+    dde-full-filesystem/fullfilesystem.cpp
+    dde-full-filesystem/fullfilesystem.h
+    dde-full-filesystem/fullfilesystemframe.h
+    dde-full-filesystem/fullfilesystemframe.cpp
+)
 # dde-lowpower
 # dde-offline-upgrader
 # dde-osd
@@ -277,3 +282,26 @@ target_link_libraries(lightdm-deepin-greeter PRIVATE
     ${LINK_LIBS}
 )
 # end lightdm-deepin-greeter
+
+# dde-full-filesystem
+add_executable(
+    dde-full-filesystem
+    app/dde-full-filesystem.cpp
+    ${DDE_FULL_FILESYSTEM_SRCS}
+    ${WIDGETS_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+    ${INCLUDE_FILES}
+    dde-full-filesystem/resources.qrc
+    ${WIDGETS_QRC}
+)
+target_include_directories(dde-full-filesystem PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DDE_FULL_FILESYSTEM_SRCS}
+    ${WIDGETS_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(dde-full-filesystem PRIVATE
+    ${LINK_LIBS}
+)
+# end dde-full-filesystem
