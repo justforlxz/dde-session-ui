@@ -31,6 +31,12 @@ set(DDE_SHUTDOWN_SRCS
 )
 
 # lightdm-deepin-greeter
+set(LIGHTDM_DEEPIN_GREETER_SRCS
+    lightdm-deepin-greeter/loginwindow.cpp
+    lightdm-deepin-greeter/loginwindow.h
+    lightdm-deepin-greeter/view/logowidget.cpp
+    lightdm-deepin-greeter/view/logowidget.h
+)
 # dde-dman-portal
 # dde-full-filesystem
 # dde-lowpower
@@ -164,7 +170,7 @@ find_package(Qt5 COMPONENTS
     Xml
 REQUIRED)
 
-pkg_check_modules(XCB_EWMH REQUIRED xcb-ewmh x11 xi)
+pkg_check_modules(XCB_EWMH REQUIRED xcb-ewmh x11 xi xcursor xfixes xrandr xext)
 pkg_check_modules(DFrameworkDBus REQUIRED dframeworkdbus)
 pkg_check_modules(QGSettings REQUIRED gsettings-qt)
 pkg_check_modules(Greeter REQUIRED liblightdm-qt5-3)
@@ -247,3 +253,27 @@ target_link_libraries(dde-shutdown PRIVATE
     ${LINK_LIBS}
 )
 # end dde-shutdown
+
+# lightdm-deepin-greeter
+add_executable(
+    lightdm-deepin-greeter
+    app/lightdm-deepin-greeter.cpp
+    ${LIGHTDM_DEEPIN_GREETER_SRCS}
+    ${WIDGETS_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+    ${INCLUDE_FILES}
+    lightdm-deepin-greeter/image.qrc
+    lightdm-deepin-greeter/logintheme.qrc
+    ${WIDGETS_QRC}
+)
+target_include_directories(lightdm-deepin-greeter PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${LIGHTDM_DEEPIN_GREETER_SRCS}
+    ${WIDGETS_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(lightdm-deepin-greeter PRIVATE
+    ${LINK_LIBS}
+)
+# end lightdm-deepin-greeter

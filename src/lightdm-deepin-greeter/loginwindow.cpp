@@ -24,9 +24,9 @@
  */
 
 #include "loginwindow.h"
-#include "lockcontent.h"
-#include "view/logowidget.h"
-#include "userinfo.h"
+#include "session-widgets/lockcontent.h"
+#include "lightdm-deepin-greeter/view/logowidget.h"
+#include "session-widgets/userinfo.h"
 
 LoginWindow::LoginWindow(SessionBaseModel * const model, QWidget *parent)
     : FullscreenBackground(parent)

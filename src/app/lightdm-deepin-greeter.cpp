@@ -23,12 +23,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "loginwindow.h"
-#include "constants.h"
-#include "lockworker.h"
-#include "sessionbasemodel.h"
-#include "propertygroup.h"
-#include "multiscreenmanager.h"
+#include "lightdm-deepin-greeter/loginwindow.h"
+#include "global_util/constants.h"
+#include "session-widgets/lockworker.h"
+#include "session-widgets/sessionbasemodel.h"
+#include "global_util/propertygroup.h"
+#include "global_util/multiscreenmanager.h"
 
 #include <DApplication>
 #include <QtCore/QTranslator>
