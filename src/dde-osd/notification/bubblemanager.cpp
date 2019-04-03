@@ -25,7 +25,6 @@
 #include <QVariantMap>
 #include <QTimer>
 #include "bubble.h"
-#include "dbuscontrol.h"
 #include "dbus_daemon_interface.h"
 #include "dbuslogin1manager.h"
 #include "notificationentity.h"
@@ -61,8 +60,9 @@ BubbleManager::BubbleManager(QObject *parent)
                                                 QDBusConnection::sessionBus(), this);
     m_dockDeamonInter = new DockDaemonInter(DockDaemonDBusServie, DockDaemonDBusPath,
                                             QDBusConnection::sessionBus(), this);
-    m_dbusControlCenter = new DBusControlCenter(ControlCenterDBusService, ControlCenterDBusPath,
-                                                    QDBusConnection::sessionBus(), this);
+    m_dbusControlCenter =
+        new ControlCenterAdaptor(ControlCenterDBusService, ControlCenterDBusPath,
+                                 QDBusConnection::sessionBus(), this);
     m_login1ManagerInterface = new Login1ManagerInterface(Login1DBusService, Login1DBusPath,
                                                           QDBusConnection::systemBus(), this);
 
@@ -79,8 +79,8 @@ BubbleManager::BubbleManager(QObject *parent)
             this, SLOT(onDbusNameOwnerChanged(QString, QString, QString)));
     connect(m_dbusdockinterface, &DBusDockInterface::geometryChanged, this, &BubbleManager::onDockRectChanged);
     connect(m_dockDeamonInter, &DockDaemonInter::PositionChanged, this, &BubbleManager::onDockPositionChanged);
-    connect(m_dbusControlCenter, &DBusControlCenter::destRectChanged, this, &BubbleManager::onCCDestRectChanged);
-    connect(m_dbusControlCenter, &DBusControlCenter::rectChanged, this, &BubbleManager::onCCRectChanged);
+    connect(m_dbusControlCenter, &ControlCenterAdaptor::destRectChanged, this, &BubbleManager::onCCDestRectChanged);
+    connect(m_dbusControlCenter, &ControlCenterAdaptor::rectChanged, this, &BubbleManager::onCCRectChanged);
 
     // get correct value for m_dockGeometry, m_dockPosition, m_ccGeometry
     if (m_dbusdockinterface->isValid())
@@ -247,6 +247,7 @@ void BubbleManager::onCCDestRectChanged(const QRect &destRect)
 
 void BubbleManager::onCCRectChanged(const QRect &rect)
 {
+    qDebug() << rect;
     m_ccGeometry = rect;
     // do NOT call setBasePosition here
 }

@@ -23,6 +23,8 @@
 #ifndef BUBBLEMANAGER_H
 #define BUBBLEMANAGER_H
 
+#include "ControlCenterAdaptor.h"
+
 #include <QObject>
 #include <QStringList>
 #include <QVariantMap>
@@ -35,6 +37,7 @@
 #include <com_deepin_dde_daemon_dock.h>
 
 using DockDaemonInter =  com::deepin::dde::daemon::Dock;
+using ControlCenterAdaptor = com::deepin::dde::ControlCenter;
 
 static const QString ControlCenterDBusService = "com.deepin.dde.ControlCenter";
 static const QString ControlCenterDBusPath = "/com/deepin/dde/ControlCenter";
@@ -52,7 +55,6 @@ static const QString DockDaemonDBusServie = "com.deepin.dde.daemon.Dock";
 static const QString DockDaemonDBusPath = "/com/deepin/dde/daemon/Dock";
 static const int ControlCenterWidth = 400;
 
-class DBusControlCenter;
 class DBusDaemonInterface;
 class Login1ManagerInterface;
 class DBusDockInterface;
@@ -135,7 +137,7 @@ private:
 private:
     Bubble *m_bubble;
     Persistence *m_persistence;
-    DBusControlCenter *m_dbusControlCenter;
+    ControlCenterAdaptor *m_dbusControlCenter;
     DBusDaemonInterface *m_dbusDaemonInterface;
     Login1ManagerInterface *m_login1ManagerInterface;
     DBusDockInterface *m_dbusdockinterface;

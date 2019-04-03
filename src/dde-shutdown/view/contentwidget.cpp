@@ -35,14 +35,14 @@
 #include "multiuserswarningview.h"
 #include "inhibitwarnview.h"
 
-#include "global_util/dbus/dbuscontrolcenter.h"
+#include "controlcenteradaptor.h"
 
 #include "session-widgets/sessionbasemodel.h"
 
 ContentWidget::ContentWidget(QWidget *parent)
     : QFrame(parent)
     , m_login1Inter(new DBusLogin1Manager("org.freedesktop.login1", "/org/freedesktop/login1", QDBusConnection::systemBus(), this))
-    , m_controlCenterInter(new DBusControlCenter(this))
+    , m_controlCenterInter(new ControlCenterAdaptor("com.deepin.dde.ControlCenter", "/com/deepin/dde/ControlCenter", QDBusConnection::sessionBus(), this))
     , m_wmInter(new com::deepin::wm("com.deepin.wm", "/com/deepin/wm", QDBusConnection::sessionBus(), this))
     , m_dbusAppearance(new Appearance("com.deepin.daemon.Appearance",
                                       "/com/deepin/daemon/Appearance",

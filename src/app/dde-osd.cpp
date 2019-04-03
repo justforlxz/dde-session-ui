@@ -32,10 +32,10 @@
 #include <DDBusSender>
 #include <DLog>
 
-#include "notification/bubblemanager.h"
-#include "notification/notifications_dbus_adaptor.h"
-#include "manager.h"
-#include "kblayoutindicator.h"
+#include "dde-osd/notification/bubblemanager.h"
+#include "dde-osd/notification/notifications_dbus_adaptor.h"
+#include "dde-osd/manager.h"
+#include "dde-osd/kblayoutindicator.h"
 
 DWIDGET_USE_NAMESPACE
 DCORE_USE_NAMESPACE

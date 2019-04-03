@@ -45,14 +45,15 @@
 #include "dde-shutdown/common.h"
 #include "systemmonitor.h"
 #include "warningview.h"
+#include "ControlCenterAdaptor.h"
 
 using Appearance = com::deepin::daemon::Appearance;
 using ImageBlur = com::deepin::daemon::ImageBlur;
+using ControlCenterAdaptor = com::deepin::dde::ControlCenter;
 
 class MultiUsersWarningView;
 class SessionBaseModel;
 class User;
-class DBusControlCenter;
 class ContentWidget: public QFrame
 {
     Q_OBJECT
@@ -114,7 +115,7 @@ private:
     QWidget *m_tipsWidget;
     QLabel *m_tipsLabel;
     DBusLogin1Manager* m_login1Inter;
-    DBusControlCenter* m_controlCenterInter;
+    ControlCenterAdaptor* m_controlCenterInter;
 
     WarningView *m_warningView = nullptr;
     QWidget *m_normalView = nullptr;

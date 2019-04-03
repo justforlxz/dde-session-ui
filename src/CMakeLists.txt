@@ -51,8 +51,64 @@ set(DDE_LOWPOWER_SRCS
     dde-lowpower/window.h
 )
 
-# dde-offline-upgrader
 # dde-osd
+set(DDE_OSD_SRCS
+    dde-osd/displaymodeprovider.cpp
+    dde-osd/kblayoutindicator.cpp
+    dde-osd/container.h
+    dde-osd/brightnessprovider.h
+    dde-osd/brightnessprovider.cpp
+    dde-osd/indicatorprovider.h
+    dde-osd/displaymodeprovider.h
+    dde-osd/abstractosdprovider.h
+    dde-osd/kblayoutprovider.h
+    dde-osd/audioprovider.h
+    dde-osd/delegate.cpp
+    dde-osd/osdprovider.h
+    dde-osd/osdprovider.cpp
+    dde-osd/listview.h
+    dde-osd/manager.cpp
+    dde-osd/listview.cpp
+    dde-osd/common.h
+    dde-osd/container.cpp
+    dde-osd/indicatorprovider.cpp
+    dde-osd/manager.h
+    dde-osd/common.cpp
+    dde-osd/notification/actionbutton.h
+    dde-osd/notification/notificationentity.h
+    dde-osd/notification/persistence.cpp
+    dde-osd/notification/icondata.cpp
+    dde-osd/notification/notificationentity.cpp
+    dde-osd/notification/dbuslogin1manager.cpp
+    dde-osd/notification/dbusdock_interface.h
+    dde-osd/notification/dbus_daemon_interface.h
+    dde-osd/notification/dbuslogin1manager.h
+    dde-osd/notification/icondata.h
+    dde-osd/notification/appbody.h
+    dde-osd/notification/appicon.cpp
+    dde-osd/notification/dbus_daemon_interface.cpp
+    dde-osd/notification/persistence.h
+    dde-osd/notification/notifications_dbus_adaptor.cpp
+    dde-osd/notification/appbodylabel.h
+    dde-osd/notification/appicon.h
+    dde-osd/notification/dbusdock_interface.cpp
+    dde-osd/notification/appbodylabel.cpp
+    dde-osd/notification/notifications_dbus_adaptor.h
+    dde-osd/notification/bubblemanager.cpp
+    dde-osd/notification/bubblemanager.h
+    dde-osd/notification/appbody.cpp
+    dde-osd/notification/actionbutton.cpp
+    dde-osd/notification/bubble.h
+    dde-osd/notification/bubble.cpp
+    dde-osd/kblayoutprovider.cpp
+    dde-osd/model.cpp
+    dde-osd/model.h
+    dde-osd/kblayoutindicator.h
+    dde-osd/delegate.h
+    dde-osd/abstractosdprovider.cpp
+    dde-osd/audioprovider.cpp
+)
+
 # dde-suspend-dialog
 # dde-switchtogreeter
 # dde-warning-dialog
@@ -139,7 +195,6 @@ set(GLOBAL_UTIL_SRCS
     global_util/dbus/dbuslockfront.h
     global_util/dbus/dbuslockfront.cpp
     global_util/dbus/dbusmediaplayer2.h
-    global_util/dbus/dbuscontrolcenter.h
     global_util/dbus/dbusmediaplayer2.cpp
     global_util/dbus/dbusvariant.cpp
     global_util/dbus/dbuslockservice.h
@@ -148,7 +203,6 @@ set(GLOBAL_UTIL_SRCS
     global_util/dbus/dbussessionmanager.cpp
     global_util/dbus/dbushotzone.h
     global_util/dbus/dbuskeyboard.cpp
-    global_util/dbus/dbuscontrolcenter.cpp
     global_util/multiscreenmanager.cpp
     global_util/public_func.cpp
     global_util/multiscreenmanager.h
@@ -179,12 +233,19 @@ find_package(Qt5 COMPONENTS
     Network
     Svg
     Xml
+    Sql
 REQUIRED)
 
 pkg_check_modules(XCB_EWMH REQUIRED xcb-ewmh x11 xi xcursor xfixes xrandr xext)
 pkg_check_modules(DFrameworkDBus REQUIRED dframeworkdbus)
 pkg_check_modules(QGSettings REQUIRED gsettings-qt)
 pkg_check_modules(Greeter REQUIRED liblightdm-qt5-3)
+
+set(dde_control_center_DBUS_SCRS xml/com.deepin.dde.ControlCenter.xml)
+qt5_add_dbus_interface(dde_control_center_DBUS_SCRS
+xml/com.deepin.dde.ControlCenter.xml
+ControlCenterAdaptor
+)
 
 set(INCLUDE_FILES
     ${PROJECT_BINARY_DIR}
@@ -195,6 +256,7 @@ set(INCLUDE_FILES
     ${QGSettings_INCLUDE_DIRS}
     ${GLOBAL_UTIL_SRCS}
     ${Greeter_INCLUDE_DIRS}
+    ${dde_control_center_DBUS_SCRS}
 )
 
 set(Qt_LIBS
@@ -206,6 +268,7 @@ set(Qt_LIBS
     Qt5::Svg
     Qt5::DBus
     Qt5::Xml
+    Qt5::Sql
     )
 
 set(LINK_LIBS
@@ -330,3 +393,22 @@ target_link_libraries(dde-lowpower PRIVATE
     ${LINK_LIBS}
 )
 # end dde-lowpower
+
+# dde-osd
+add_executable(
+    dde-osd
+    app/dde-osd.cpp
+    ${DDE_OSD_SRCS}
+    ${INCLUDE_FILES}
+    dde-osd/image.qrc
+    dde-osd/theme.qrc
+)
+target_include_directories(dde-osd PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DDE_OSD_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(dde-osd PRIVATE
+    ${LINK_LIBS}
+)
+# end dde-osd
