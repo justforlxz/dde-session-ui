@@ -121,6 +121,11 @@ set(DDE_SWITCHTOGREETER_SRCS
 )
 
 # dde-warning-dialog
+set(DDE_WARNING_DIALOG_SRCS
+    dde-warning-dialog/warningdialog.cpp
+    dde-warning-dialog/warningdialog.h
+)
+
 # dde-welcome
 # dde-wm-chooser
 # dmemory-warning-dialog
@@ -474,3 +479,20 @@ target_link_libraries(dde-switchtogreeter PRIVATE
     ${GIO_LIBRARIES}
 )
 # dde-switchtogreeter
+
+# dde-warning-dialog
+add_executable(
+    dde-warning-dialog
+    app/dde-warning-dialog.cpp
+    ${DDE_WARNING_DIALOG_SRCS}
+    ${INCLUDE_FILES}
+)
+target_include_directories(dde-warning-dialog PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DDE_WARNING_DIALOG_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(dde-warning-dialog PRIVATE
+    ${LINK_LIBS}
+)
+# dde-warning-dialog
