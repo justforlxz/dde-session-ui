@@ -110,6 +110,11 @@ set(DDE_OSD_SRCS
 )
 
 # dde-suspend-dialog
+set(DDE_SUSPEND_DIALOG_SRCS
+    dde-suspend-dialog/suspenddialog.cpp
+    dde-suspend-dialog/suspenddialog.h
+)
+
 # dde-switchtogreeter
 # dde-warning-dialog
 # dde-welcome
@@ -412,3 +417,20 @@ target_link_libraries(dde-osd PRIVATE
     ${LINK_LIBS}
 )
 # end dde-osd
+
+# dde-suppend-dialog
+add_executable(
+    dde-suspend-dialog
+    app/dde-suspend-dialog.cpp
+    ${DDE_SUSPEND_DIALOG_SRCS}
+    ${INCLUDE_FILES}
+)
+target_include_directories(dde-suspend-dialog PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DDE_SUSPEND_DIALOG_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(dde-suspend-dialog PRIVATE
+    ${LINK_LIBS}
+)
+# dde-suppend-dialog
