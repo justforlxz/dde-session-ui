@@ -116,6 +116,10 @@ set(DDE_SUSPEND_DIALOG_SRCS
 )
 
 # dde-switchtogreeter
+set(DDE_SWITCHTOGREETER_SRCS
+    app/switchtogreeter.c
+)
+
 # dde-warning-dialog
 # dde-welcome
 # dde-wm-chooser
@@ -434,3 +438,39 @@ target_link_libraries(dde-suspend-dialog PRIVATE
     ${LINK_LIBS}
 )
 # dde-suppend-dialog
+
+# dde-switchtogreeter
+pkg_search_module(GLIB REQUIRED glib-2.0)
+pkg_check_modules(GIO REQUIRED gio-unix-2.0)
+pkg_check_modules(PC_SYSTEMD QUIET libsystemd)
+
+find_library(SYSTEMD_LIBRARIES NAMES systemd ${PC_SYSTEMD_LIBRARY_DIRS})
+find_path(SYSTEMD_INCLUDE_DIRS systemd/sd-login.h HINTS ${PC_SYSTEMD_INCLUDE_DIRS})
+
+FIND_PATH(GIO_INCLUDE_DIR gio.h
+   PATHS
+   ${GIO_INCLUDEDIR}
+   ${GIO_INCLUDE_DIRS}
+   PATH_SUFFIXES glib-2.0/gio/
+)
+
+SET(GIO_LIBRARIES ${_GioLibs} )
+SET(GIO_INCLUDE_DIRS ${GIO_INCLUDE_DIR} )
+
+add_executable(
+    dde-switchtogreeter
+    ${DDE_SWITCHTOGREETER_SRCS}
+)
+target_include_directories(dde-switchtogreeter PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DDE_SWITCHTOGREETER_SRCS}
+    ${GLIB_INCLUDE_DIRS}
+    ${SYSTEMD_INCLUDE_DIRS}
+    ${GIO_INCLUDE_DIRS}
+)
+target_link_libraries(dde-switchtogreeter PRIVATE
+    ${GLIB_LDFLAGS}
+    ${SYSTEMD_LIBRARIES}
+    ${GIO_LIBRARIES}
+)
+# dde-switchtogreeter

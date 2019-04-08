@@ -359,4 +359,3 @@ int main(int argc G_GNUC_UNUSED, char **argv G_GNUC_UNUSED)
 
     return ret;
 }
-
