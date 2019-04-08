@@ -270,6 +270,17 @@ set(GLOBAL_UTIL_SRCS
     global_util/propertygroup.cpp
 )
 
+# libdde-auth
+set(LIBDDE_AUTH_SRCS
+    libdde-auth/authdbusadapter.cpp
+    libdde-auth/authagent.cpp
+    libdde-auth/interface/deepinauthinterface.h
+    libdde-auth/authdbusadapter.h
+    libdde-auth/authagent.h
+    libdde-auth/deepinauthframework.cpp
+    libdde-auth/deepinauthframework.h
+)
+
 # widgets qrc
 set(WIDGETS_QRC
 widgets/widgetsimages.qrc
@@ -297,11 +308,44 @@ pkg_check_modules(DFrameworkDBus REQUIRED dframeworkdbus)
 pkg_check_modules(QGSettings REQUIRED gsettings-qt)
 pkg_check_modules(Greeter REQUIRED liblightdm-qt5-3)
 
+function(generation_dbus_interface xml class_name class_file option)
+    execute_process(COMMAND qdbusxml2cpp ${option} -p ${class_file} -c ${class_name} ${xml}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+endfunction(generation_dbus_interface)
+
 set(dde_control_center_DBUS_SCRS xml/com.deepin.dde.ControlCenter.xml)
 qt5_add_dbus_interface(dde_control_center_DBUS_SCRS
 xml/com.deepin.dde.ControlCenter.xml
 ControlCenterAdaptor
 )
+
+# generation_dbus_interface(
+#     ${CMAKE_SOURCE_DIR}/src/xml/com.deepin.daemon.Authority.xml
+#     AuthorityInterface
+#     ${CMAKE_CURRENT_BINARY_DIR}/authority_interface
+#     -N
+# )
+# set(authority_DBUS_SCRS
+#     ${CMAKE_CURRENT_BINARY_DIR}/authority_interface.h
+#     ${CMAKE_CURRENT_BINARY_DIR}/authority_interface.cpp
+# )
+
+# generation_dbus_interface(
+#     ${CMAKE_SOURCE_DIR}/src/xml/com.deepin.daemon.authority.Transaction.xml
+#     TransactionInterface
+#     ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface
+#     -N
+# )
+# set(transaction_DBUS_SCRS
+#     ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface.h
+#     ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface.cpp
+# )
+
+# set(SESSION_WIDGETS_SRCS
+# ${SESSION_WIDGETS_SRCS}
+# ${authority_DBUS_SCRS}
+# ${transaction_DBUS_SCRS}
+# )
 
 set(INCLUDE_FILES
     ${PROJECT_BINARY_DIR}
@@ -347,6 +391,7 @@ add_executable(
     dde-lock/images.qrc
     dde-lock/logintheme.qrc
     ${WIDGETS_QRC}
+    ${LIBDDE_AUTH_SRCS}
 )
 target_include_directories(dde-lock PUBLIC
     ${PROJECT_BINARY_DIR}
@@ -354,6 +399,7 @@ target_include_directories(dde-lock PUBLIC
     ${WIDGETS_SRCS}
     ${SESSION_WIDGETS_SRCS}
     ${INCLUDE_FILES}
+    ${LIBDDE_AUTH_SRCS}
 )
 target_link_libraries(dde-lock PRIVATE
     ${LINK_LIBS}
@@ -371,6 +417,7 @@ add_executable(
     dde-shutdown/image.qrc
     dde-shutdown/qss.qrc
     ${WIDGETS_QRC}
+    ${LIBDDE_AUTH_SRCS}
 )
 target_include_directories(dde-shutdown PUBLIC
     ${PROJECT_BINARY_DIR}
@@ -378,6 +425,7 @@ target_include_directories(dde-shutdown PUBLIC
     ${WIDGETS_SRCS}
     ${SESSION_WIDGETS_SRCS}
     ${INCLUDE_FILES}
+    ${LIBDDE_AUTH_SRCS}
 )
 target_link_libraries(dde-shutdown PRIVATE
     ${LINK_LIBS}
@@ -395,6 +443,7 @@ add_executable(
     lightdm-deepin-greeter/image.qrc
     lightdm-deepin-greeter/logintheme.qrc
     ${WIDGETS_QRC}
+    ${LIBDDE_AUTH_SRCS}
 )
 target_include_directories(lightdm-deepin-greeter PUBLIC
     ${PROJECT_BINARY_DIR}
@@ -402,6 +451,7 @@ target_include_directories(lightdm-deepin-greeter PUBLIC
     ${WIDGETS_SRCS}
     ${SESSION_WIDGETS_SRCS}
     ${INCLUDE_FILES}
+    ${LIBDDE_AUTH_SRCS}
 )
 target_link_libraries(lightdm-deepin-greeter PRIVATE
     ${LINK_LIBS}
@@ -567,14 +617,12 @@ add_executable(
     ${DDE_WM_CHOOSER_SRCS}
     ${INCLUDE_FILES}
     ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
 )
 target_include_directories(dde-wm-chooser PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DDE_WM_CHOOSER_SRCS}
     ${INCLUDE_FILES}
     ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
 )
 target_link_libraries(dde-wm-chooser PRIVATE
     ${LINK_LIBS}

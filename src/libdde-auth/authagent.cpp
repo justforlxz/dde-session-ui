@@ -32,12 +32,12 @@ AuthAgent::AuthAgent(Type type, QObject *parent)
 
     QDBusObjectPath authDBusPath = QDBusObjectPath(dbuspath);
 
-    m_authority = new Authority("com.deepin.daemon.Authority",
-                                "/com/deepin/daemon/Authority",
-                                QDBusConnection::systemBus(), this);
+    m_authority = new AuthorityInterface("com.deepin.daemon.Authority",
+                                         "/com/deepin/daemon/Authority",
+                                         QDBusConnection::systemBus(), this);
 
     QDBusObjectPath keyboard = m_authority->Start(typeName, "", authDBusPath).value();
-    m_transaction = new Transaction("com.deepin.daemon.Authority", keyboard.path(), QDBusConnection::systemBus(), this);
+    m_transaction = new TransactionInterface("com.deepin.daemon.Authority", keyboard.path(), QDBusConnection::systemBus(), this);
 }
 
 AuthAgent::~AuthAgent()

@@ -6,9 +6,6 @@
 
 #include <QObject>
 
-using Authority = com::deepin::daemon::Authority;
-using Transaction = ComDeepinDaemonAuthorityTransactionInterface;
-
 class DeepinAuthFramework;
 class AuthAgent : public QObject {
     Q_OBJECT
@@ -37,8 +34,8 @@ public slots:
     DeepinAuthFramework *parent();
 
 private:
-    Authority *m_authority;
-    Transaction *m_transaction;
+    AuthorityInterface *m_authority;
+    TransactionInterface *m_transaction;
     Type m_type;
 };
 
