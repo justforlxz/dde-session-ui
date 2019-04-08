@@ -26,7 +26,7 @@
 #include <QApplication>
 #include <QProcess>
 
-#include "guardien.h"
+#include "session-ui-guardien/guardien.h"
 
 int main(int argc, char *argv[])
 {

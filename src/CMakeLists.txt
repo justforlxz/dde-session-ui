@@ -169,6 +169,10 @@ set(DNETWORK_SECRET_DIALOG_SRCS
 )
 
 # session-ui-guardien
+set(SESSION_UI_GUARDIEN_SRCS
+    session-ui-guardien/guardien.cpp
+    session-ui-guardien/guardien.h
+)
 
 # widgets
 set(WIDGETS_SRCS
@@ -610,3 +614,20 @@ target_link_libraries(dnetwork-secret-dialog PRIVATE
     ${LINK_LIBS}
 )
 # dnetwork-secret-dialog
+
+# session-ui-guardien
+add_executable(
+    session-ui-guardien
+    app/session-ui-guardien.cpp
+    ${SESSION_UI_GUARDIEN_SRCS}
+    ${INCLUDE_FILES}
+)
+target_include_directories(session-ui-guardien PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${SESSION_UI_GUARDIEN_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(session-ui-guardien PRIVATE
+    ${LINK_LIBS}
+)
+# session-ui-guardien
