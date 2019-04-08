@@ -145,6 +145,23 @@ set(DDE_WM_CHOOSER_SRCS
 )
 
 # dmemory-warning-dialog
+set(DMEMORY_WARNING_DIALOG_SRCS
+    dmemory-warning-dialog/dmemorywarningdialog.h
+    dmemory-warning-dialog/dmemorywarningdialogadaptor.cpp
+    dmemory-warning-dialog/buttondelegate.cpp
+    dmemory-warning-dialog/processinfodelegate.h
+    dmemory-warning-dialog/processinfomanager.cpp
+    dmemory-warning-dialog/processinfotable.cpp
+    dmemory-warning-dialog/processinfomodel.h
+    dmemory-warning-dialog/processinfomanager.h
+    dmemory-warning-dialog/processinfomodel.cpp
+    dmemory-warning-dialog/processinfodelegate.cpp
+    dmemory-warning-dialog/processinfotable.h
+    dmemory-warning-dialog/dmemorywarningdialogadaptor.h
+    dmemory-warning-dialog/dmemorywarningdialog.cpp
+    dmemory-warning-dialog/buttondelegate.h
+)
+
 # dnetwork-secret-dialog
 # session-ui-guardien
 
@@ -554,3 +571,20 @@ target_link_libraries(dde-wm-chooser PRIVATE
     ${LINK_LIBS}
 )
 # dde-wm-chooser
+
+# dmemory-warning-dialog
+add_executable(
+    dmemory-warning-dialog
+    app/dmemory-warning-dialog.cpp
+    ${DMEMORY_WARNING_DIALOG_SRCS}
+    ${INCLUDE_FILES}
+)
+target_include_directories(dmemory-warning-dialog PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DMEMORY_WARNING_DIALOG_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(dmemory-warning-dialog PRIVATE
+    ${LINK_LIBS}
+)
+# dmemory-warning-dialog

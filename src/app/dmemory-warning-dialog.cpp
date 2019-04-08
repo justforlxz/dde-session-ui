@@ -23,8 +23,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "dmemorywarningdialog.h"
-#include "dmemorywarningdialogadaptor.h"
+#include "dmemory-warning-dialog/dmemorywarningdialog.h"
+#include "dmemory-warning-dialog/dmemorywarningdialogadaptor.h"
 
 #include <DApplication>
 #include <DLog>
