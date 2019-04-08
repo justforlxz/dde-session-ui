@@ -137,6 +137,13 @@ set(DDE_WELCOME_SRCS
 )
 
 # dde-wm-chooser
+set(DDE_WM_CHOOSER_SRCS
+    dde-wm-chooser/wmchooser.h
+    dde-wm-chooser/wmframe.cpp
+    dde-wm-chooser/wmframe.h
+    dde-wm-chooser/wmchooser.cpp
+)
+
 # dmemory-warning-dialog
 # dnetwork-secret-dialog
 # session-ui-guardien
@@ -526,3 +533,24 @@ target_link_libraries(dde-welcome PRIVATE
     ${LINK_LIBS}
 )
 # dde-welcome
+
+# dde-wm-chooser
+add_executable(
+    dde-wm-chooser
+    app/dde-wm-chooser.cpp
+    ${DDE_WM_CHOOSER_SRCS}
+    ${INCLUDE_FILES}
+    ${WIDGETS_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+)
+target_include_directories(dde-wm-chooser PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DDE_WM_CHOOSER_SRCS}
+    ${INCLUDE_FILES}
+    ${WIDGETS_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+)
+target_link_libraries(dde-wm-chooser PRIVATE
+    ${LINK_LIBS}
+)
+# dde-wm-chooser

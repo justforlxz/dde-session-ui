@@ -26,7 +26,7 @@
 #ifndef VMFRAME_H
 #define VMFRAME_H
 
-#include "fullscreenbackground.h"
+#include "widgets/fullscreenbackground.h"
 #include "wmchooser.h"
 #include <QWidget>
 #include <com_deepin_daemon_imageblur.h>

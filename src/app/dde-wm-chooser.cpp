@@ -23,9 +23,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "wmframe.h"
-#include "propertygroup.h"
-#include "multiscreenmanager.h"
+#include "dde-wm-chooser/wmframe.h"
+#include "global_util/propertygroup.h"
+#include "global_util/multiscreenmanager.h"
 
 #include <DApplication>
 #include <QCommandLineOption>
