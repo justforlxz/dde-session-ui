@@ -163,6 +163,11 @@ set(DMEMORY_WARNING_DIALOG_SRCS
 )
 
 # dnetwork-secret-dialog
+set(DNETWORK_SECRET_DIALOG_SRCS
+    dnetwork-secret-dialog/networksecretdialog.cpp
+    dnetwork-secret-dialog/networksecretdialog.h
+)
+
 # session-ui-guardien
 
 # widgets
@@ -588,3 +593,20 @@ target_link_libraries(dmemory-warning-dialog PRIVATE
     ${LINK_LIBS}
 )
 # dmemory-warning-dialog
+
+# dnetwork-secret-dialog
+add_executable(
+    dnetwork-secret-dialog
+    app/dnetwork-secret-dialog.cpp
+    ${DNETWORK_SECRET_DIALOG_SRCS}
+    ${INCLUDE_FILES}
+)
+target_include_directories(dnetwork-secret-dialog PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DNETWORK_SECRET_DIALOG_SRCS}
+    ${INCLUDE_FILES}
+)
+target_link_libraries(dnetwork-secret-dialog PRIVATE
+    ${LINK_LIBS}
+)
+# dnetwork-secret-dialog
