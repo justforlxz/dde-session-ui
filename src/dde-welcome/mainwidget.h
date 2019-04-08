@@ -26,7 +26,7 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include "fullscreenbackground.h"
+#include "widgets/fullscreenbackground.h"
 
 #include <com_deepin_daemon_imageblur.h>
 

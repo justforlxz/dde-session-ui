@@ -127,6 +127,15 @@ set(DDE_WARNING_DIALOG_SRCS
 )
 
 # dde-welcome
+set(DDE_WELCOME_SRCS
+    dde-welcome/utils.h
+    dde-welcome/updatecontent.cpp
+    dde-welcome/updatecontent.h
+    dde-welcome/mainwidget.cpp
+    dde-welcome/mainwidget.h
+    dde-welcome/utils.cpp
+)
+
 # dde-wm-chooser
 # dmemory-warning-dialog
 # dnetwork-secret-dialog
@@ -496,3 +505,24 @@ target_link_libraries(dde-warning-dialog PRIVATE
     ${LINK_LIBS}
 )
 # dde-warning-dialog
+
+# dde-welcome
+add_executable(
+    dde-welcome
+    app/dde-welcome.cpp
+    ${DDE_WELCOME_SRCS}
+    ${INCLUDE_FILES}
+    ${WIDGETS_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+)
+target_include_directories(dde-welcome PUBLIC
+    ${PROJECT_BINARY_DIR}
+    ${DDE_WELCOME_SRCS}
+    ${INCLUDE_FILES}
+    ${WIDGETS_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+)
+target_link_libraries(dde-welcome PRIVATE
+    ${LINK_LIBS}
+)
+# dde-welcome

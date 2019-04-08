@@ -29,10 +29,10 @@
 #include <QWindow>
 #include <QDesktopWidget>
 
-#include "mainwidget.h"
-#include "utils.h"
-#include "propertygroup.h"
-#include "multiscreenmanager.h"
+#include "dde-welcome/mainwidget.h"
+#include "dde-welcome/utils.h"
+#include "global_util/propertygroup.h"
+#include "global_util/multiscreenmanager.h"
 
 DWIDGET_USE_NAMESPACE
 DCORE_USE_NAMESPACE

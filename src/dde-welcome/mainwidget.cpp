@@ -25,7 +25,7 @@
 
 #include "mainwidget.h"
 #include "updatecontent.h"
-#include "constants.h"
+#include "global_util/constants.h"
 #include "utils.h"
 
 #include <QGSettings/QGSettings>
