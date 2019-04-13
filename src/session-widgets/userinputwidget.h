@@ -9,7 +9,7 @@
 #include <darrowrectangle.h>
 
 #include "widgets/useravatar.h"
-#include "framedatabind.h"
+#include "global_util/framedatabind.h"
 #include "userinfo.h"
 #include "widgets/otheruserinput.h"
 #include "lockpasswordwidget.h"

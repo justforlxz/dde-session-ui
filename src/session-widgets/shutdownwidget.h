@@ -23,65 +23,56 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SESSIONWIDGET_H
-#define SESSIONWIDGET_H
+#ifndef SHUTDOWNWIDGET
+#define SHUTDOWNWIDGET
 
 #include <QFrame>
-#include <QList>
-#include <QSettings>
 
-#include <QLightDM/SessionsModel>
+#include <functional>
 
-#include "rounditembutton.h"
-#include "session-widgets/framedatabind.h"
+#include "global_util/util_updateui.h"
+#include "widgets/rounditembutton.h"
+#include "session-widgets/sessionbasemodel.h"
+#include "global_util/framedatabind.h"
 
-class SessionBaseModel;
-class SessionWidget : public QFrame
+class ShutdownWidget: public QFrame
 {
     Q_OBJECT
 public:
-    explicit SessionWidget(QWidget *parent = nullptr);
-    void setModel(SessionBaseModel * const model);
-    ~SessionWidget();
+    ShutdownWidget(QWidget* parent = 0);
+    ~ShutdownWidget();
 
-    void show();
-    int sessionCount() const;
-    const QString lastSessionName() const;
-    const QString currentSessionName() const;
-    const QString currentSessionKey() const;
-    const QString currentSessionOwner() const { return m_currentUser; }
+    void setModel(SessionBaseModel * const model);
 
 signals:
-    void sessionChanged(const QString &sessionName);
-    void hideFrame();
+    void abortOperation();
 
 public slots:
-    void switchToUser(const QString &userName);
     void leftKeySwitch();
     void rightKeySwitch();
-    void chooseSession();
+    void shutdownAction();
 
 protected:
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-
-private slots:
-    void loadSessionList();
-    void onSessionButtonClicked();
+    bool event(QEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    int sessionIndex(const QString &sessionName);
+    void initUI();
+    void initConnect();
+    void updateTr(RoundItemButton * widget, const QString &tr);
     void onOtherPageChanged(const QVariant &value);
 
-private:
-    int m_currentSessionIndex;
-    QString m_currentUser;
     SessionBaseModel *m_model;
+    int m_index = 0;
+    QHBoxLayout* m_Layout;
+    QList<RoundItemButton *> m_btnList;
+    RoundItemButton* m_currentSelectedBtn = NULL;
+    RoundItemButton* m_requireShutdownButton;
+    RoundItemButton* m_requireRestartButton;
+    RoundItemButton* m_requireSuspendButton;
+    RoundItemButton* m_requireHibernateButton;
+    QMap<RoundItemButton*, SessionBaseModel::PowerAction> m_actionMap;
+    QList<std::pair<std::function<void (QString)>, QString>> m_trList;
     FrameDataBind *m_frameDataBind;
-
-    QLightDM::SessionsModel *m_sessionModel;
-    QList<RoundItemButton *> m_sessionBtns;
 };
-
-#endif // SESSIONWIDGET_H
+#endif // SHUTDOWNWIDGET

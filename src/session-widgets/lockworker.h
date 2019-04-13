@@ -9,6 +9,7 @@
 #include "../libdde-auth/deepinauthframework.h"
 
 #include <QLightDM/SessionsModel>
+#include <QLightDM/Greeter>
 
 #include <com_deepin_daemon_logined.h>
 #include <com_deepin_daemon_accounts.h>

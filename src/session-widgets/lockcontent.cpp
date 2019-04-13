@@ -4,8 +4,8 @@
 #include "userinputwidget.h"
 #include "sessionbasemodel.h"
 #include "userframe.h"
-#include "widgets/sessionwidget.h"
-#include "widgets/shutdownwidget.h"
+#include "sessionwidget.h"
+#include "shutdownwidget.h"
 #include "widgets/virtualkbinstance.h"
 
 #include <QMouseEvent>

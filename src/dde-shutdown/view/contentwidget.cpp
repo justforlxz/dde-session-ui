@@ -35,7 +35,7 @@
 #include "multiuserswarningview.h"
 #include "inhibitwarnview.h"
 
-#include "controlcenteradaptor.h"
+#include "ControlCenterAdaptor.h"
 
 #include "session-widgets/sessionbasemodel.h"
 

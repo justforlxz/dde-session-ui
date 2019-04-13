@@ -1,7 +1,7 @@
 #include "authagent.h"
 #include "deepinauthframework.h"
 
-#include "agent_adaptor.h"
+#include "agentadaptor.h"
 
 #include <QDBusConnection>
 #include <QDateTime>

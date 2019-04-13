@@ -37,7 +37,7 @@
 #include <com_deepin_daemon_accounts_user.h>
 #include <memory>
 
-#include "useravatar.h"
+#include "widgets/useravatar.h"
 
 using UserInter = com::deepin::daemon::accounts::User;
 
@@ -112,4 +112,3 @@ private:
     QGraphicsOpacityEffect* m_opacityEffect;
 };
 #endif // UserButton
-

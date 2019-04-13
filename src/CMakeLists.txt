@@ -186,10 +186,8 @@ set(WIDGETS_SRCS
     widgets/userbreathinglabel.cpp
     widgets/darrowrectangle.cpp
     widgets/keyboardmonitor.h
-    widgets/shutdownwidget.cpp
     widgets/rounditembutton.cpp
     widgets/controlwidget.cpp
-    widgets/sessionwidget.h
     widgets/mediawidget.h
     widgets/fullscreenbackground.cpp
     widgets/kblayoutwidget.cpp
@@ -197,16 +195,12 @@ set(WIDGETS_SRCS
     widgets/useravatar.cpp
     widgets/mediawidget.cpp
     widgets/loginbutton.cpp
-    widgets/userbutton.h
     widgets/dbreathinglabel.h
-    widgets/userbutton.cpp
     widgets/fullscreenbackground.h
-    widgets/sessionwidget.cpp
     widgets/keyboardmonitor.cpp
     widgets/darrowrectangle.h
     widgets/errortooltip.h
     widgets/userbreathinglabel.h
-    widgets/shutdownwidget.h
     widgets/dbreathinglabel.cpp
     widgets/kblayoutwidget.h
     widgets/rounditembutton.h
@@ -218,7 +212,6 @@ set(SESSION_WIDGETS_SRCS
     session-widgets/lockworker.cpp
     session-widgets/sessionbasewindow.cpp
     session-widgets/userinputwidget.h
-    session-widgets/framedatabind.h
     session-widgets/lockpasswordwidget.h
     session-widgets/lockpasswordwidget.cpp
     session-widgets/userframe.cpp
@@ -229,8 +222,13 @@ set(SESSION_WIDGETS_SRCS
     session-widgets/lockworker.h
     session-widgets/sessionbasemodel.h
     session-widgets/lockcontent.h
-    session-widgets/framedatabind.cpp
     session-widgets/lockcontent.cpp
+    session-widgets/sessionwidget.h
+    session-widgets/sessionwidget.cpp
+    session-widgets/shutdownwidget.h
+    session-widgets/shutdownwidget.cpp
+    session-widgets/userbutton.h
+    session-widgets/userbutton.cpp
 )
 
 # global_util
@@ -259,6 +257,8 @@ set(GLOBAL_UTIL_SRCS
     global_util/dbus/dbussessionmanager.cpp
     global_util/dbus/dbushotzone.h
     global_util/dbus/dbuskeyboard.cpp
+    global_util/framedatabind.h
+    global_util/framedatabind.cpp
     global_util/multiscreenmanager.cpp
     global_util/public_func.cpp
     global_util/multiscreenmanager.h
@@ -319,44 +319,50 @@ xml/com.deepin.dde.ControlCenter.xml
 ControlCenterAdaptor
 )
 
-# generation_dbus_interface(
-#     ${CMAKE_SOURCE_DIR}/src/xml/com.deepin.daemon.Authority.xml
-#     AuthorityInterface
-#     ${CMAKE_CURRENT_BINARY_DIR}/authority_interface
-#     -N
-# )
-# set(authority_DBUS_SCRS
-#     ${CMAKE_CURRENT_BINARY_DIR}/authority_interface.h
-#     ${CMAKE_CURRENT_BINARY_DIR}/authority_interface.cpp
-# )
+set(agent_adapter_DBUS_SRCS xml/com.deepin.daemon.authority.Agent.xml)
+qt5_add_dbus_adaptor(agent_adapter_DBUS_SRCS
+xml/com.deepin.daemon.authority.Agent.xml
+libdde-auth/authagent.h
+AuthAgent
+)
 
-# generation_dbus_interface(
-#     ${CMAKE_SOURCE_DIR}/src/xml/com.deepin.daemon.authority.Transaction.xml
-#     TransactionInterface
-#     ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface
-#     -N
-# )
-# set(transaction_DBUS_SCRS
-#     ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface.h
-#     ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface.cpp
-# )
+generation_dbus_interface(
+    ${CMAKE_SOURCE_DIR}/src/xml/com.deepin.daemon.Authority.xml
+    AuthorityInterface
+    ${CMAKE_CURRENT_BINARY_DIR}/authority_interface
+    -N
+)
+set(authority_DBUS_SCRS
+    ${CMAKE_CURRENT_BINARY_DIR}/authority_interface.h
+    ${CMAKE_CURRENT_BINARY_DIR}/authority_interface.cpp
+)
 
-# set(SESSION_WIDGETS_SRCS
-# ${SESSION_WIDGETS_SRCS}
-# ${authority_DBUS_SCRS}
-# ${transaction_DBUS_SCRS}
-# )
+generation_dbus_interface(
+    ${CMAKE_SOURCE_DIR}/src/xml/com.deepin.daemon.authority.Transaction.xml
+    TransactionInterface
+    ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface
+    -N
+)
+set(transaction_DBUS_SCRS
+    ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface.h
+    ${CMAKE_CURRENT_BINARY_DIR}/transaction_interface.cpp
+)
 
-set(INCLUDE_FILES
+set(SESSION_INCLUDE_FILES
     ${PROJECT_BINARY_DIR}
-    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
-    ${XCB_EWMH_INCLUDE_DIRS}
     ${DtkWidget_INCLUDE_DIRS}
-    ${DFrameworkDBus_INCLUDE_DIRS}
+    ${XCB_EWMH_INCLUDE_DIRS}
     ${QGSettings_INCLUDE_DIRS}
-    ${GLOBAL_UTIL_SRCS}
     ${Greeter_INCLUDE_DIRS}
-    ${dde_control_center_DBUS_SCRS}
+    ${GLOBAL_UTIL_SRCS}
+    ${WIDGETS_SRCS}
+    ${LIBDDE_AUTH_SRCS}
+    ${SESSION_WIDGETS_SRCS}
+    ${authority_DBUS_SCRS}
+    ${transaction_DBUS_SCRS}
+    ${agent_adapter_DBUS_SRCS}
+    ${LIBDDE_AUTH_SRCS}
+    ${DFrameworkDBus_INCLUDE_DIRS}
 )
 
 set(Qt_LIBS
@@ -371,38 +377,31 @@ set(Qt_LIBS
     Qt5::Sql
     )
 
-set(LINK_LIBS
+set(SESSION_LIBS
     ${Qt_LIBS}
-    ${XCB_EWMH_LIBRARIES}
     ${DtkWidget_LIBRARIES}
-    ${QGSettings_LIBRARIES}
     ${DFrameworkDBus_LIBRARIES}
+    ${XCB_EWMH_LIBRARIES}
+    ${QGSettings_LIBRARIES}
     ${Greeter_LIBRARIES}
-    )
+)
 
 # dde-lock
 add_executable(
     dde-lock
     app/dde-lock.cpp
     ${DDE_LOCK_SRCS}
-    ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
-    ${INCLUDE_FILES}
+    ${SESSION_INCLUDE_FILES}
     dde-lock/images.qrc
     dde-lock/logintheme.qrc
     ${WIDGETS_QRC}
-    ${LIBDDE_AUTH_SRCS}
 )
 target_include_directories(dde-lock PUBLIC
-    ${PROJECT_BINARY_DIR}
     ${DDE_LOCK_SRCS}
-    ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
-    ${INCLUDE_FILES}
-    ${LIBDDE_AUTH_SRCS}
+    ${SESSION_INCLUDE_FILES}
 )
 target_link_libraries(dde-lock PRIVATE
-    ${LINK_LIBS}
+    ${SESSION_LIBS}
 )
 # end dde-lock
 
@@ -411,24 +410,20 @@ add_executable(
     dde-shutdown
     app/dde-shutdown.cpp
     ${DDE_SHUTDOWN_SRCS}
-    ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
-    ${INCLUDE_FILES}
+    ${SESSION_INCLUDE_FILES}
+    ${dde_control_center_DBUS_SCRS}
     dde-shutdown/image.qrc
     dde-shutdown/qss.qrc
     ${WIDGETS_QRC}
-    ${LIBDDE_AUTH_SRCS}
 )
 target_include_directories(dde-shutdown PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DDE_LOCK_SRCS}
-    ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
-    ${INCLUDE_FILES}
-    ${LIBDDE_AUTH_SRCS}
+    ${SESSION_INCLUDE_FILES}
+    ${dde_control_center_DBUS_SCRS}
 )
 target_link_libraries(dde-shutdown PRIVATE
-    ${LINK_LIBS}
+    ${SESSION_LIBS}
 )
 # end dde-shutdown
 
@@ -437,24 +432,18 @@ add_executable(
     lightdm-deepin-greeter
     app/lightdm-deepin-greeter.cpp
     ${LIGHTDM_DEEPIN_GREETER_SRCS}
-    ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
-    ${INCLUDE_FILES}
+    ${SESSION_INCLUDE_FILES}
     lightdm-deepin-greeter/image.qrc
     lightdm-deepin-greeter/logintheme.qrc
     ${WIDGETS_QRC}
-    ${LIBDDE_AUTH_SRCS}
 )
 target_include_directories(lightdm-deepin-greeter PUBLIC
     ${PROJECT_BINARY_DIR}
     ${LIGHTDM_DEEPIN_GREETER_SRCS}
-    ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
-    ${INCLUDE_FILES}
-    ${LIBDDE_AUTH_SRCS}
+    ${SESSION_INCLUDE_FILES}
 )
 target_link_libraries(lightdm-deepin-greeter PRIVATE
-    ${LINK_LIBS}
+    ${SESSION_LIBS}
 )
 # end lightdm-deepin-greeter
 
@@ -463,21 +452,17 @@ add_executable(
     dde-full-filesystem
     app/dde-full-filesystem.cpp
     ${DDE_FULL_FILESYSTEM_SRCS}
-    ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
-    ${INCLUDE_FILES}
+    ${SESSION_INCLUDE_FILES}
     dde-full-filesystem/resources.qrc
     ${WIDGETS_QRC}
 )
 target_include_directories(dde-full-filesystem PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DDE_FULL_FILESYSTEM_SRCS}
-    ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
-    ${INCLUDE_FILES}
+    ${SESSION_INCLUDE_FILES}
 )
 target_link_libraries(dde-full-filesystem PRIVATE
-    ${LINK_LIBS}
+    ${SESSION_LIBS}
 )
 # end dde-full-filesystem
 
@@ -486,17 +471,25 @@ add_executable(
     dde-lowpower
     app/dde-lowpower.cpp
     ${DDE_LOWPOWER_SRCS}
-    ${INCLUDE_FILES}
+    ${PROJECT_BINARY_DIR}
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${DtkWidget_INCLUDE_DIRS}
+    ${DFrameworkDBus_INCLUDE_DIRS}
     dde-lowpower/images.qrc
     ${WIDGETS_QRC}
 )
 target_include_directories(dde-lowpower PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DDE_LOWPOWER_SRCS}
-    ${INCLUDE_FILES}
+    ${PROJECT_BINARY_DIR}
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${DtkWidget_INCLUDE_DIRS}
+    ${DFrameworkDBus_INCLUDE_DIRS}
 )
 target_link_libraries(dde-lowpower PRIVATE
-    ${LINK_LIBS}
+    ${Qt_LIBS}
+    ${DtkWidget_LIBRARIES}
+    ${DFrameworkDBus_LIBRARIES}
 )
 # end dde-lowpower
 
@@ -505,17 +498,18 @@ add_executable(
     dde-osd
     app/dde-osd.cpp
     ${DDE_OSD_SRCS}
-    ${INCLUDE_FILES}
+    ${SESSION_INCLUDE_FILES}
+    ${dde_control_center_DBUS_SCRS}
     dde-osd/image.qrc
     dde-osd/theme.qrc
 )
 target_include_directories(dde-osd PUBLIC
-    ${PROJECT_BINARY_DIR}
     ${DDE_OSD_SRCS}
-    ${INCLUDE_FILES}
+    ${SESSION_INCLUDE_FILES}
+    ${dde_control_center_DBUS_SCRS}
 )
 target_link_libraries(dde-osd PRIVATE
-    ${LINK_LIBS}
+    ${SESSION_LIBS}
 )
 # end dde-osd
 
@@ -524,15 +518,17 @@ add_executable(
     dde-suspend-dialog
     app/dde-suspend-dialog.cpp
     ${DDE_SUSPEND_DIALOG_SRCS}
-    ${INCLUDE_FILES}
+    ${PROJECT_BINARY_DIR}
+    ${DtkWidget_INCLUDE_DIRS}
 )
 target_include_directories(dde-suspend-dialog PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DDE_SUSPEND_DIALOG_SRCS}
-    ${INCLUDE_FILES}
+    ${DtkWidget_INCLUDE_DIRS}
 )
 target_link_libraries(dde-suspend-dialog PRIVATE
-    ${LINK_LIBS}
+    ${QT_LIBS}
+    ${DtkWidget_LIBRARIES}
 )
 # dde-suppend-dialog
 
@@ -577,15 +573,16 @@ add_executable(
     dde-warning-dialog
     app/dde-warning-dialog.cpp
     ${DDE_WARNING_DIALOG_SRCS}
-    ${INCLUDE_FILES}
+    ${DtkWidget_INCLUDE_DIRS}
 )
 target_include_directories(dde-warning-dialog PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DDE_WARNING_DIALOG_SRCS}
-    ${INCLUDE_FILES}
+    ${DtkWidget_INCLUDE_DIRS}
 )
 target_link_libraries(dde-warning-dialog PRIVATE
-    ${LINK_LIBS}
+    ${Qt_LIBS}
+    ${DtkWidget_LIBRARIES}
 )
 # dde-warning-dialog
 
@@ -594,19 +591,30 @@ add_executable(
     dde-welcome
     app/dde-welcome.cpp
     ${DDE_WELCOME_SRCS}
-    ${INCLUDE_FILES}
+    ${PROJECT_BINARY_DIR}
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${DtkWidget_INCLUDE_DIRS}
+    ${DFrameworkDBus_INCLUDE_DIRS}
+    ${QGSettings_INCLUDE_DIRS}
+    ${GLOBAL_UTIL_SRCS}
     ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
 )
 target_include_directories(dde-welcome PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DDE_WELCOME_SRCS}
-    ${INCLUDE_FILES}
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${DtkWidget_INCLUDE_DIRS}
+    ${DFrameworkDBus_INCLUDE_DIRS}
+    ${QGSettings_INCLUDE_DIRS}
+    ${GLOBAL_UTIL_SRCS}
     ${WIDGETS_SRCS}
-    ${SESSION_WIDGETS_SRCS}
 )
 target_link_libraries(dde-welcome PRIVATE
-    ${LINK_LIBS}
+    ${Qt_LIBS}
+    ${DtkWidget_LIBRARIES}
+    ${DFrameworkDBus_LIBRARIES}
+    ${QGSettings_LIBRARIES}
+    ${XCB_EWMH_LIBRARIES}
 )
 # dde-welcome
 
@@ -615,17 +623,34 @@ add_executable(
     dde-wm-chooser
     app/dde-wm-chooser.cpp
     ${DDE_WM_CHOOSER_SRCS}
-    ${INCLUDE_FILES}
+    ${PROJECT_BINARY_DIR}
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${DtkWidget_INCLUDE_DIRS}
+    ${GLOBAL_UTIL_SRCS}
+    ${DFrameworkDBus_INCLUDE_DIRS}
+    ${Greeter_INCLUDE_DIRS}
+    ${QGSettings_INCLUDE_DIRS}
     ${WIDGETS_SRCS}
 )
 target_include_directories(dde-wm-chooser PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DDE_WM_CHOOSER_SRCS}
-    ${INCLUDE_FILES}
+    ${PROJECT_BINARY_DIR}
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${DtkWidget_INCLUDE_DIRS}
+    ${GLOBAL_UTIL_SRCS}
+    ${DFrameworkDBus_INCLUDE_DIRS}
+    ${Greeter_INCLUDE_DIRS}
+    ${QGSettings_INCLUDE_DIRS}
     ${WIDGETS_SRCS}
 )
 target_link_libraries(dde-wm-chooser PRIVATE
-    ${LINK_LIBS}
+    ${Qt_LIBS}
+    ${DtkWidget_LIBRARIES}
+    ${DFrameworkDBus_LIBRARIES}
+    ${Greeter_LIBRARIES}
+    ${QGSettings_LIBRARIES}
+    ${XCB_EWMH_LIBRARIES}
 )
 # dde-wm-chooser
 
@@ -634,15 +659,17 @@ add_executable(
     dmemory-warning-dialog
     app/dmemory-warning-dialog.cpp
     ${DMEMORY_WARNING_DIALOG_SRCS}
-    ${INCLUDE_FILES}
+    ${DFrameworkDBus_INCLUDE_DIRS}
 )
 target_include_directories(dmemory-warning-dialog PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DMEMORY_WARNING_DIALOG_SRCS}
-    ${INCLUDE_FILES}
+    ${DFrameworkDBus_INCLUDE_DIRS}
 )
 target_link_libraries(dmemory-warning-dialog PRIVATE
-    ${LINK_LIBS}
+    ${Qt_LIBS}
+    ${DtkWidget_LIBRARIES}
+    ${DFrameworkDBus_LIBRARIES}
 )
 # dmemory-warning-dialog
 
@@ -651,15 +678,14 @@ add_executable(
     dnetwork-secret-dialog
     app/dnetwork-secret-dialog.cpp
     ${DNETWORK_SECRET_DIALOG_SRCS}
-    ${INCLUDE_FILES}
 )
 target_include_directories(dnetwork-secret-dialog PUBLIC
     ${PROJECT_BINARY_DIR}
     ${DNETWORK_SECRET_DIALOG_SRCS}
-    ${INCLUDE_FILES}
 )
 target_link_libraries(dnetwork-secret-dialog PRIVATE
-    ${LINK_LIBS}
+    ${Qt_LIBS}
+    ${DtkWidget_LIBRARIES}
 )
 # dnetwork-secret-dialog
 
@@ -668,14 +694,13 @@ add_executable(
     session-ui-guardien
     app/session-ui-guardien.cpp
     ${SESSION_UI_GUARDIEN_SRCS}
-    ${INCLUDE_FILES}
 )
 target_include_directories(session-ui-guardien PUBLIC
     ${PROJECT_BINARY_DIR}
     ${SESSION_UI_GUARDIEN_SRCS}
-    ${INCLUDE_FILES}
 )
 target_link_libraries(session-ui-guardien PRIVATE
-    ${LINK_LIBS}
+    ${Qt_LIBS}
+    ${DtkWidget_LIBRARIES}
 )
 # session-ui-guardien
